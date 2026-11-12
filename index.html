@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday!</title>
+<meta name="theme-color" content="#24153F">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#24153F;--bg2:#40246F;--pink:#FF5C8A;--amber:#FFB63D;--mint:#5CE0C0;--sky:#7FB4FF;--ink:#FFF7EC;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;--body:"DM Sans",system-ui,sans-serif}
+*{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);color:var(--ink);background:var(--bg);line-height:1.55;overflow-x:hidden;
+  background-image:radial-gradient(ellipse at 50% 0%,var(--bg2),transparent 70%),
+  radial-gradient(1.5px 1.5px at 12% 30%,#fff8,transparent),radial-gradient(1.5px 1.5px at 78% 18%,#fff8,transparent),
+  radial-gradient(1px 1px at 40% 60%,#fff6,transparent),radial-gradient(1.5px 1.5px at 90% 70%,#fff8,transparent),
+  radial-gradient(1px 1px at 25% 85%,#fff6,transparent)}
+h1,h2{font-family:var(--display);line-height:1.05;letter-spacing:-.02em}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
+.stage{position:relative;min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:7.5rem 1.25rem 2rem;overflow:hidden}
+.stage h1{font-size:clamp(2.2rem,9vw,4.4rem);font-weight:800;max-width:14ch}
+.stage p{margin-top:.75rem;max-width:30ch;opacity:.85;min-height:3.1em}
+#cake{width:min(86vw,380px);height:auto;margin-top:1rem;overflow:visible}
+#relight{margin-top:1rem}
+
+.balloon{position:absolute;width:clamp(38px,9vw,58px);aspect-ratio:.82;border:0;border-radius:50% 50% 48% 48%;cursor:pointer;z-index:2;
+  background:radial-gradient(circle at 32% 28%,#fff9 0 8%,transparent 22%),var(--c);
+  animation:bob var(--d) ease-in-out var(--dl) infinite alternate;padding:0}
+.balloon::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:46px;background:#fff6}
+.balloon:focus-visible,.btn:focus-visible,.gift:focus-visible,input:focus-visible{outline:3px solid #fff;outline-offset:3px}
+@keyframes bob{to{transform:translateY(-14px) rotate(3deg)}}
+
+.candle{cursor:pointer;outline:none}
+.candle:focus-visible .hit{stroke:#fff;stroke-width:2;stroke-dasharray:4}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flick .35s ease-in-out infinite alternate}
+@keyframes flick{from{transform:scale(1,1) rotate(-3deg)}to{transform:scale(.88,1.12) rotate(3deg)}}
+.candle.out .flame{display:none}
+.smoke{opacity:0;fill:#ffffffaa}
+.candle.out .smoke{animation:smoke 1.3s ease-out forwards}
+@keyframes smoke{from{opacity:.9;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-34px) scale(2.4)}}
+
+.btn{font:700 1rem var(--body);color:#24153F;background:var(--amber);border:0;border-radius:999px;padding:.8rem 1.5rem;cursor:pointer;transition:transform .15s}
+.btn:active{transform:scale(.95)}
+.btn.alt{background:transparent;color:var(--ink);border:2px solid #fff6}
+
+.greeting{padding:5rem 1.25rem 3rem;max-width:640px;margin:0 auto;text-align:center}
+.greeting h2{font-size:clamp(2.2rem,9vw,4rem);font-weight:800}
+.msg{margin:1.25rem auto 0;font-size:1.15rem;max-width:36ch}
+.from{margin-top:1rem;font-weight:700;color:var(--amber)}
+.greeting h3{font-family:var(--display);font-size:1.5rem;margin:3.5rem 0 1rem}
+.gifts{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem}
+.gift{perspective:700px;border:0;background:none;padding:0;cursor:pointer;aspect-ratio:1;font:inherit;color:inherit}
+.gift .in{position:relative;display:block;width:100%;height:100%;transform-style:preserve-3d;transition:transform .6s cubic-bezier(.3,1.3,.5,1)}
+.gift.open .in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;display:grid;place-items:center;border-radius:18px;backface-visibility:hidden;padding:.6rem}
+.front{font-size:2.6rem;background:var(--c)}
+.back{transform:rotateY(180deg);background:var(--ink);color:#24153F;font-size:.82rem;font-weight:700;line-height:1.3}
+.share{margin-top:3.5rem;padding-top:2rem;border-top:2px dashed #fff3}
+.share p{opacity:.85;margin-bottom:.75rem}
+.row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap}
+input{font:inherit;color:#24153F;background:var(--ink);border:0;border-radius:999px;padding:.8rem 1.1rem;min-width:0;flex:1 1 150px;max-width:260px}
+#copied{min-height:1.5em;margin-top:.5rem;color:var(--mint);font-weight:700}
+
+@media (prefers-reduced-motion:reduce){.balloon,.flame{animation:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<main>
+<section class="stage" id="stage">
+  <h1>Make a wish, <span id="n1">Friend</span>.</h1>
+  <p id="hint">Tap each candle to blow it out. Pop the balloons if you like.</p>
+
+  <svg id="cake" viewBox="0 0 300 270" role="group" aria-label="Birthday cake with five lit candles">
+    <ellipse cx="150" cy="248" rx="140" ry="14" fill="#fff" opacity=".18"/>
+    <rect x="35" y="168" width="230" height="74" rx="12" fill="#FF5C8A"/>
+    <rect x="35" y="168" width="230" height="14" rx="7" fill="#FFF7EC"/>
+    <g fill="#FFF7EC"><circle cx="55" cy="186" r="8"/><circle cx="95" cy="188" r="10"/><circle cx="140" cy="186" r="8"/><circle cx="185" cy="189" r="10"/><circle cx="235" cy="186" r="8"/></g>
+    <g fill="#FFB63D"><circle cx="70" cy="214" r="5"/><circle cx="120" cy="222" r="5"/><circle cx="170" cy="212" r="5"/><circle cx="225" cy="222" r="5"/></g>
+    <rect x="72" y="118" width="156" height="56" rx="12" fill="#7FB4FF"/>
+    <rect x="72" y="118" width="156" height="13" rx="6" fill="#FFF7EC"/>
+    <g fill="#FFF7EC"><circle cx="95" cy="134" r="8"/><circle cx="135" cy="136" r="10"/><circle cx="180" cy="134" r="8"/><circle cx="212" cy="135" r="7"/></g>
+
+    <g class="candle" tabindex="0" role="button" aria-label="Blow out candle 1"><rect class="hit" x="87" y="50" width="30" height="72" fill="transparent"/>
+      <rect x="98" y="86" width="8" height="34" rx="2" fill="#5CE0C0"/><circle class="smoke" cx="102" cy="76" r="5"/><g class="flame"><ellipse cx="102" cy="74" rx="7" ry="12" fill="#FFB63D"/><ellipse cx="102" cy="78" rx="3.5" ry="6" fill="#FFF7EC"/></g></g>
+    <g class="candle" tabindex="0" role="button" aria-label="Blow out candle 2"><rect class="hit" x="112" y="50" width="30" height="72" fill="transparent"/>
+      <rect x="123" y="86" width="8" height="34" rx="2" fill="#FF5C8A"/><circle class="smoke" cx="127" cy="76" r="5"/><g class="flame"><ellipse cx="127" cy="74" rx="7" ry="12" fill="#FFB63D"/><ellipse cx="127" cy="78" rx="3.5" ry="6" fill="#FFF7EC"/></g></g>
+    <g class="candle" tabindex="0" role="button" aria-label="Blow out candle 3"><rect class="hit" x="135" y="50" width="30" height="72" fill="transparent"/>
+      <rect x="146" y="86" width="8" height="34" rx="2" fill="#FFB63D"/><circle class="smoke" cx="150" cy="76" r="5"/><g class="flame"><ellipse cx="150" cy="74" rx="7" ry="12" fill="#FFB63D"/><ellipse cx="150" cy="78" rx="3.5" ry="6" fill="#FFF7EC"/></g></g>
+    <g class="candle" tabindex="0" role="button" aria-label="Blow out candle 4"><rect class="hit" x="158" y="50" width="30" height="72" fill="transparent"/>
+      <rect x="169" y="86" width="8" height="34" rx="2" fill="#FF5C8A"/><circle class="smoke" cx="173" cy="76" r="5"/><g class="flame"><ellipse cx="173" cy="74" rx="7" ry="12" fill="#FFB63D"/><ellipse cx="173" cy="78" rx="3.5" ry="6" fill="#FFF7EC"/></g></g>
+    <g class="candle" tabindex="0" role="button" aria-label="Blow out candle 5"><rect class="hit" x="183" y="50" width="30" height="72" fill="transparent"/>
+      <rect x="194" y="86" width="8" height="34" rx="2" fill="#5CE0C0"/><circle class="smoke" cx="198" cy="76" r="5"/><g class="flame"><ellipse cx="198" cy="74" rx="7" ry="12" fill="#FFB63D"/><ellipse cx="198" cy="78" rx="3.5" ry="6" fill="#FFF7EC"/></g></g>
+  </svg>
+  <button class="btn alt" id="relight" hidden>Light the candles again</button>
+</section>
+
+<section class="greeting" id="greeting" hidden>
+  <h2>Happy birthday, <span id="n2">Friend</span>!</h2>
+  <p class="msg" id="msg"></p>
+  <p class="from" id="from"></p>
+
+  <h3>Open your gifts</h3>
+  <div class="gifts" id="gifts"></div>
+
+  <div class="share">
+    <p>Want to send this to someone else? Type their name to get a link.</p>
+    <div class="row">
+      <input id="who" type="text" maxlength="30" placeholder="Their name" aria-label="Name of the birthday person" autocomplete="off">
+      <button class="btn" id="copy">Copy link</button>
+    </div>
+    <div id="copied" role="status"></div>
+  </div>
+</section>
+</main>
+
+<script>
+/* ---- EDIT THIS: your default greeting ---- */
+const CONFIG = {
+  name: "Friend",
+  from: "Your friend",
+  message: "Wishing you a day full of laughter, good food, and the people you love. May this year be your best one yet.",
+  gifts: ["A year full of good news", "Unlimited cake today", "Someone is thinking of you"]
+};
+/* ------------------------------------------- */
+
+const $ = s => document.querySelector(s);
+const q = new URLSearchParams(location.search);
+const name = (q.get("name") || CONFIG.name).slice(0, 40);
+const from = (q.get("from") || CONFIG.from).slice(0, 40);
+const msg = (q.get("msg") || CONFIG.message).slice(0, 400);
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+document.title = "Happy Birthday, " + name + "!";
+$("#n1").textContent = name;
+$("#n2").textContent = name;
+$("#msg").textContent = msg;
+if (from) $("#from").textContent = "With love, " + from;
+
+/* Confetti */
+const cv = $("#fx"), cx = cv.getContext("2d");
+let P = [], raf = 0;
+const COL = ["#FF5C8A", "#FFB63D", "#5CE0C0", "#7FB4FF", "#FFF7EC"];
+function size() {
+  const d = window.devicePixelRatio || 1;
+  cv.width = innerWidth * d; cv.height = innerHeight * d;
+  cx.setTransform(d, 0, 0, d, 0, 0);
+}
+addEventListener("resize", size); size();
+function burst(x, y, n, cols) {
+  cols = cols || COL;
+  if (reduce) n = Math.min(n, 12);
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * Math.PI * 2, s = 3 + Math.random() * 7;
+    P.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s - 4, r: 3 + Math.random() * 4,
+      c: cols[i % cols.length], rot: Math.random() * 6, vr: (Math.random() - .5) * .4, life: 1 });
+  }
+  if (!raf) raf = requestAnimationFrame(loop);
+}
+function loop() {
+  cx.clearRect(0, 0, innerWidth, innerHeight);
+  P = P.filter(p => p.life > 0 && p.y < innerHeight + 20);
+  for (const p of P) {
+    p.vy += .18; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life -= .007;
+    cx.save(); cx.globalAlpha = Math.max(p.life, 0); cx.translate(p.x, p.y); cx.rotate(p.rot);
+    cx.fillStyle = p.c; cx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); cx.restore();
+  }
+  raf = P.length ? requestAnimationFrame(loop) : 0;
+}
+
+/* Balloons */
+["#FF5C8A", "#FFB63D", "#5CE0C0", "#7FB4FF", "#FF5C8A", "#5CE0C0"].forEach((c, i) => {
+  const b = document.createElement("button");
+  b.className = "balloon";
+  b.setAttribute("aria-label", "Pop balloon");
+  b.style.cssText = "left:" + (6 + i * 16) + "%;top:" + (i % 2 ? 4 : 10) + "%;--c:" + c + ";--d:" + (2.6 + (i % 3) * .7) + "s;--dl:-" + i + "s";
+  b.addEventListener("click", () => {
+    const r = b.getBoundingClientRect();
+    burst(r.left + r.width / 2, r.top + r.height / 2, 30, [c, "#FFF7EC"]);
+    b.remove();
+  });
+  $("#stage").appendChild(b);
+});
+
+/* Candles */
+const candles = [...document.querySelectorAll(".candle")];
+let lit = candles.length;
+function blowOut(c) {
+  if (c.classList.contains("out")) return;
+  c.classList.add("out"); lit--;
+  const r = c.getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + 20, 14);
+  if (navigator.vibrate) navigator.vibrate(20);
+  if (!lit) finale();
+}
+candles.forEach(c => {
+  c.addEventListener("click", () => blowOut(c));
+  c.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); blowOut(c); } });
+});
+function finale() {
+  const r = $("#cake").getBoundingClientRect();
+  burst(r.left + r.width / 2, r.top + 40, 120);
+  setTimeout(() => burst(innerWidth * .2, innerHeight * .4, 60), 250);
+  setTimeout(() => burst(innerWidth * .8, innerHeight * .4, 60), 450);
+  $("#hint").textContent = "Your wish is made. Happy birthday!";
+  $("#greeting").hidden = false;
+  $("#relight").hidden = false;
+  setTimeout(() => $("#greeting").scrollIntoView({ behavior: "smooth" }), 900);
+}
+$("#relight").addEventListener("click", () => {
+  candles.forEach(c => c.classList.remove("out"));
+  lit = candles.length;
+  $("#hint").textContent = "Tap each candle to blow it out. Pop the balloons if you like.";
+  $("#relight").hidden = true;
+  scrollTo({ top: 0, behavior: "smooth" });
+});
+
+/* Gifts */
+const gc = ["#FF5C8A", "#5CE0C0", "#7FB4FF"];
+CONFIG.gifts.slice(0, 3).forEach((t, i) => {
+  const g = document.createElement("button");
+  g.className = "gift";
+  g.style.setProperty("--c", gc[i]);
+  g.setAttribute("aria-label", "Open gift " + (i + 1));
+  g.innerHTML = '<span class="in"><span class="face front">🎁</span><span class="face back"></span></span>';
+  g.querySelector(".back").textContent = t;
+  g.addEventListener("click", () => {
+    const opening = !g.classList.contains("open");
+    g.classList.toggle("open");
+    if (opening) { const r = g.getBoundingClientRect(); burst(r.left + r.width / 2, r.top + r.height / 2, 24, [gc[i], "#FFF7EC"]); }
+  });
+  $("#gifts").appendChild(g);
+});
+
+/* Share link */
+$("#copy").addEventListener("click", async () => {
+  const who = $("#who").value.trim();
+  if (!who) { $("#copied").textContent = "Type a name first."; $("#who").focus(); return; }
+  const url = location.href.split(/[?#]/)[0] + "?name=" + encodeURIComponent(who) + (from ? "&from=" + encodeURIComponent(from) : "");
+  try { await navigator.clipboard.writeText(url); $("#copied").textContent = "Link copied!"; }
+  catch (e) { $("#who").value = url; $("#who").select(); $("#copied").textContent = "Copy the link above."; }
+});
+</script>
+</body>
+</html>
